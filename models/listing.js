@@ -28,9 +28,10 @@ const listingSchema = new Schema ({
 
     reviews: [
         {
-            type: String,
-        }
-    ]
+            type: Schema.Types.ObjectId,
+            ref: "Review",
+        },
+    ],
 });
 
 // creating model using above schema
