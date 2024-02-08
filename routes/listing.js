@@ -63,6 +63,7 @@ router.put("/:id",
 
     let {id} = req.params;
     await Listing.findByIdAndUpdate(id,{...req.body.listing});  // {...req.body.listing} js object which have all parameter and convert it into seperated value
+    req.flash("success", "Listing Updated!");
     res.redirect(`/listings/${id}`);
 }));
 
@@ -71,6 +72,7 @@ router.delete("/:id", wrapAsync( async (req,res)=>{
     let {id} = req.params;
     let deleteListing = await Listing.findByIdAndDelete(id);  // when findByIdAndDelete call, so as a middleware listingSchema.post will inside listing.js
     console.log(deleteListing);
+    req.flash("success", "Listing Deleted!");
     res.redirect("/listings");
 }));
 
