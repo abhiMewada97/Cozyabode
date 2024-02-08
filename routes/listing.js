@@ -66,7 +66,7 @@ router.put("/:id",
 }));
 
 // Delete Route
-router.delete("/listings/:id", wrapAsync( async (req,res)=>{
+router.delete("/:id", wrapAsync( async (req,res)=>{
     let {id} = req.params;
     let deleteListing = await Listing.findByIdAndDelete(id);  // when findByIdAndDelete call, so as a middleware listingSchema.post will inside listing.js
     console.log(deleteListing);
