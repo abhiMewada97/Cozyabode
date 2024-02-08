@@ -5,7 +5,8 @@ const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
-
+const session = require("express-session");
+const flash = require("connect-flash");
 
 const listings = require("./routes/listing.js");      // parent route & inside listing.js is child route
 const reviews = require("./routes/review.js");
@@ -32,10 +33,27 @@ app.use(methodOverride("_method"));
 app.engine("ejs",ejsMate);
 app.use(express.static(path.join(__dirname,"/public")));
 
-
+const sesssionOptions = {
+    secret: "mysupersecretcode",
+    resave: false,
+    saveUninitialized: true,
+    cookie:{
+        expires: Date.now()+ 7 * 24 * 60 *60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly: true
+    }
+};
 
 app.get("/",(req,res) =>{
     res.send("Hi I am root");
+});
+
+app.use(session(sesssionOptions));
+app.use(flash());  // we have use flash before route becuase routes use the flash
+
+app.use((req,res,next) => {             // middleware
+    res.locals.success = req.flash("success");
+    next();
 });
 
 app.use("/listings",listings);
