@@ -11,8 +11,10 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 
-const listings = require("./routes/listing.js");      // parent route & inside listing.js is child route
-const reviews = require("./routes/review.js");
+const listingRouter = require("./routes/listing.js");      // parent route & inside listing.js is child route
+const reviewRouter = require("./routes/review.js");
+const userRouter = require("./routes/user.js");
+
 const user = require("./models/user.js");
 const { read } = require("fs");
 
@@ -82,8 +84,9 @@ app.get("/demouser", async(req,res) => {
     res.send(registeredUser);
 });
 
-app.use("/listings",listings);
-app.use("/listings/:id/reviews",reviews);
+app.use("/listings", listingRouter);
+app.use("/listings/:id/reviews", reviewRouter);
+app.use("/", userRouter);
 
 app.all("*",(req,res,next) =>{
     next(new ExpressError(404,"Page Not Found!"));   // here we call next and next ke ander ek message pass karenge ( inside next we throw an express error we set "404" and "page not found")
