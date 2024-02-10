@@ -7,9 +7,14 @@ const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
 const session = require("express-session");
 const flash = require("connect-flash");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const User = require("./models/user.js");
 
 const listings = require("./routes/listing.js");      // parent route & inside listing.js is child route
 const reviews = require("./routes/review.js");
+const user = require("./models/user.js");
+const { read } = require("fs");
 
 const MONGO_URL = 'mongodb://127.0.0.1:27017/wanderlust';
 
@@ -51,10 +56,30 @@ app.get("/",(req,res) =>{
 app.use(session(sesssionOptions));
 app.use(flash());  // we have use flash before route becuase routes use the flash
 
+// here we are telling that we will use it
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));   // use static authenticate method of model in LocalStrategy  // when new user come it authenticate the use   // authenticate() Generates a function that is used in Passport's LocalStrategy
+
+// use static serialize and deserialize of model for passport session support
+passport.serializeUser(User.serializeUser());           // serializeUser() Generates a function that is used by Passport to serialize users into the session   // serialize means -> store the info related to user into session 
+passport.deserializeUser(User.deserializeUser());       // deserializeUser() --//-- to deserialize --//--       
+
+
 app.use((req,res,next) => {             // middleware
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
     next();
+});
+
+app.get("/demouser", async(req,res) => {
+    let fakeUser = new User({
+        email: "student@gmail.com",
+        username: "delta-student",
+    });
+
+    let registeredUser = await User.register(fakeUser, "helloworld");   // return new user    // register method of user save fakeuser automaticaly inside database with "helloworld" password; 
+    res.send(registeredUser);
 });
 
 app.use("/listings",listings);
