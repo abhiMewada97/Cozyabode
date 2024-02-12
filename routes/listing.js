@@ -49,6 +49,7 @@ router.post("/", isLoggedIn,
         // let listing = req.body.listing;
 
         const newListing = new Listing(req.body.listing);
+        console.log(req.user);
         newListing.owner = req.user._id;     // we are saving information of current user inside,  owner inside newListing 
                                             // how to save info --> we know req object ke ander passport by default user related information store karta hai inside req.user and it has many diff diff value
         await newListing.save();
