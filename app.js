@@ -10,6 +10,7 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
+const isLoggedIn = require("./middelware.js");
 
 const listingRouter = require("./routes/listing.js");      // parent route & inside listing.js is child route
 const reviewRouter = require("./routes/review.js");
@@ -71,6 +72,7 @@ passport.deserializeUser(User.deserializeUser());       // deserializeUser() --/
 app.use((req,res,next) => {             // middleware
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
+    res.locals.currUser = req.user;             // store info of current user of request // jis user ka session chal raha ushki info store karega
     next();
 });
 
