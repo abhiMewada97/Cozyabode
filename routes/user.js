@@ -40,7 +40,7 @@ router.post("/login", saveRedirectUrl, passport.authenticate("local", {failureRe
         req.flash("success", "Welcome to Wanderlust! You are logged in!");
         // res.redirect("/listings");
         // res.redirect(req.session.redirectUrl);      // pasport by default reset req.session  // when login, login delete redirectUrl from req.session 
-        let redirectUrl = res.locals.redirectUrl || "/listings"
+        let redirectUrl = res.locals.redirectUrl || "/listings";
         res.redirect(redirectUrl);                    // pasport by default reset req.session  // when login, login delete redirectUrl from req.session 
 });
 
