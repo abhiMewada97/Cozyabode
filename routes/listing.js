@@ -18,7 +18,19 @@ router.get("/new", isLoggedIn, (req,res)=> {
 // Show Route
 router.get("/:id", wrapAsync( async (req,res) =>{
     let {id} = req.params;
-    const listing = await Listing.findById(id).populate("reviews").populate("owner");
+
+    // const listing = await Listing.findById(id)                // here we are populating listing
+    //                             .populate("reviews")          // listing ko populate karne ke sath sath authour ko bhi populate karege for each review -> for that we use nested populate
+    //                             .populate("owner");           // nested populate means populating all reviews and their owner
+    
+    const listing = await Listing.findById(id)
+                                .populate({
+                                    path: "reviews",
+                                    populate: {
+                                        path: "auther",
+                                    },            // here we populate authore with reviews // so for that we pass opbect in first populate and first parameter is "path"
+                                })                // path me all review will come // and har ek review ke liye path me author aa jaye
+                                .populate("owner");
     if(!listing) {
         req.flash("error","Listing you requested for, does not exit");
         res.redirect("/listings");

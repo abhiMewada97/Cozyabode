@@ -1,7 +1,7 @@
-const ExpressError = require("./utils/ExpressError.js");
-const { listingSchema } = require("./schema.js");
 const Listing = require("./models/listing");
-const { reviewSchema } = require("./schema.js");
+const Review = require("./models/review");
+const ExpressError = require("./utils/ExpressError.js");
+const { listingSchema, reviewSchema } = require("./schema.js");
 
 module.exports.isLoggedIn = (req,res,next) => {
     // console.log(req);
@@ -10,7 +10,8 @@ module.exports.isLoggedIn = (req,res,next) => {
 
     if(!req.isAuthenticated()) {
         req.session.redirectUrl = req.originalUrl;                      // storing url inside session, because all methods and middleware have access of req.session so we can access redirectUrl
-        req.flash("error","you must be logged in to create listing!");
+        // req.flash("error","you must be logged in to create listing!");
+        req.flash("error","you must be logged!");
         return res.redirect("/login");
     }
     next();
@@ -54,4 +55,15 @@ module.exports.validateReview = (req,res,next) =>{
     }else {
         next();
     }
+}
+
+module.exports.isReviewAuthor = async (req,res,next) => {
+    
+    let { id, reviewId } = req.params;
+    let review = await Review.findById(reviewId);
+    if(!review.auther.equals(res.locals.currUser._id)) {
+        req.flash("error", "You are not the owner of this review");
+        return res.redirect(`/listings/${id}`);
+    }
+    next();
 }
