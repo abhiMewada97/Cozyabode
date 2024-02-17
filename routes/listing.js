@@ -6,29 +6,24 @@ const { isLoggedIn, isOwner, validateListing } = require("../middelware.js");
 
 const listingController = require("../controllers/listings.js");        // using MVC framwork
 
-// Index Route
-router.get("/", wrapAsync( listingController.index));     //replace all app. --by-- router. // replace all "/listings" --by-- "/"
+// Returns an instance of a single route which you can then use to handle HTTP verbs with optional middleware.
+// Use router.route() to avoid duplicate route naming and thus typing errors.
+//
+router.route("/")
+.get( wrapAsync( listingController.index))       // Index Route
+.post( isLoggedIn, validateListing, wrapAsync(listingController.createListing ));     // Create Route
+//                              ^
+//                              |  using router.route
+// router.get("/", wrapAsync( listingController.index));       // Index Route            //replace all app. --by-- router. // replace all "/listings" --by-- "/"
+// router.post("/", isLoggedIn, validateListing, wrapAsync(listingController.createListing ));;     // Create Route     
 
-// New Route
-router.get("/new", isLoggedIn, listingController.renderNewForm);
+router.get("/new", isLoggedIn, listingController.renderNewForm)         // New Route
 
-// Show Route
-router.get("/:id", wrapAsync( listingController.showListing ));
+router.route("/:id")
+.get( wrapAsync( listingController.showListing ))         // Show Route
+.put( isLoggedIn, isOwner, validateListing, wrapAsync( listingController.upddateListing))          // Update Route
+.delete( isLoggedIn, isOwner, wrapAsync( listingController.destroyListing ));      // Delete Route
 
-// Create Route
-router.post("/", isLoggedIn, validateListing, wrapAsync(listingController.createListing)
-);
-
-// Edit Route
-router.get("/:id/edit", isLoggedIn, isOwner, wrapAsync( listingController.renderEditForm));
-
-// Update Route
-router.put("/:id", isLoggedIn, 
-    isOwner,
-    validateListing,
-    wrapAsync( listingController.upddateListing));
-
-// Delete Route
-router.delete("/:id", isLoggedIn, isOwner, wrapAsync( listingController.destroyListing ));
+router.get("/:id/edit", isLoggedIn, isOwner, wrapAsync( listingController.renderEditForm));         // Edit Route
 
 module.exports = router;
