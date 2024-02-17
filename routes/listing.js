@@ -22,7 +22,6 @@ router.route("/")
 //     res.send(req.file); 
 // }); 
 
-
 //                              ^
 //                              |  using router.route
 // router.get("/", wrapAsync( listingController.index));       // Index Route            //replace all app. --by-- router. // replace all "/listings" --by-- "/"
@@ -32,7 +31,7 @@ router.get("/new", isLoggedIn, listingController.renderNewForm)         // New R
 
 router.route("/:id")
 .get( wrapAsync( listingController.showListing ))         // Show Route
-.put( isLoggedIn, isOwner, validateListing, wrapAsync( listingController.upddateListing))          // Update Route
+.put( isLoggedIn, isOwner, upload.single('listing[image]'), validateListing, wrapAsync( listingController.upddateListing))          // Update Route
 .delete( isLoggedIn, isOwner, wrapAsync( listingController.destroyListing ));      // Delete Route
 
 router.get("/:id/edit", isLoggedIn, isOwner, wrapAsync( listingController.renderEditForm));         // Edit Route

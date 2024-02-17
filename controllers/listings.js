@@ -60,15 +60,25 @@ module.exports.renderEditForm = async (req,res) =>{
         req.flash("error","Listing you requested for, does not exit");
         res.redirect("/listings");
     }
-    res.render("listings/edit.ejs",{listing});
+    let originamImageUrl = listing.image.url;
+    originamImageUrl = originamImageUrl.replace("/upload", "/upload/w_250");         // clouding image transformations
+    res.render("listings/edit.ejs",{listing, originamImageUrl});
 }
 
 // Update
 module.exports.upddateListing = async (req,res) =>{
 
     let {id} = req.params;
+    let listing = await Listing.findByIdAndUpdate(id,{...req.body.listing});  // {...req.body.listing} js object which have all parameter and convert it into seperated value
+    
+    if(typeof req.file !== "undefined") {
 
-    await Listing.findByIdAndUpdate(id,{...req.body.listing});  // {...req.body.listing} js object which have all parameter and convert it into seperated value
+        let url = req.file.path;
+        let filename = req.file.filename;
+        listing.image = {url, filename};
+        await listing.save();
+    }
+    
     req.flash("success", "Listing Updated!");
     res.redirect(`/listings/${id}`);
 }
