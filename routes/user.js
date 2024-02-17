@@ -15,7 +15,7 @@ router.route("/signup")
 // Login user
 router.route("/login")
 .get( userController.renderLoginForm)
-.post( saveRedirectUrl, passport.authenticate("local", {failureRedirect: '/login', failureFlash: true }), );    // stratigy-> "local"  // passport.authenticate() middleware use to authentaicate
+.post( saveRedirectUrl, passport.authenticate("local", {failureRedirect: '/login', failureFlash: true }), userController.login );    // stratigy-> "local"  // passport.authenticate() middleware use to authentaicate
 
 // Logout User
 router.get("/logout", userController.logout);
