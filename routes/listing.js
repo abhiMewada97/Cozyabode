@@ -6,12 +6,20 @@ const { isLoggedIn, isOwner, validateListing } = require("../middelware.js");
 
 const listingController = require("../controllers/listings.js");        // using MVC framwork
 
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
+
 // Returns an instance of a single route which you can then use to handle HTTP verbs with optional middleware.
 // Use router.route() to avoid duplicate route naming and thus typing errors.
 //
 router.route("/")
 .get( wrapAsync( listingController.index))       // Index Route
-.post( isLoggedIn, validateListing, wrapAsync(listingController.createListing ));     // Create Route
+// .post( isLoggedIn, validateListing, wrapAsync(listingController.createListing ));     // Create Route
+.post( upload.single('listing[image]'), (req,res) =>{
+    res.send(req.file); 
+}); 
+
+
 //                              ^
 //                              |  using router.route
 // router.get("/", wrapAsync( listingController.index));       // Index Route            //replace all app. --by-- router. // replace all "/listings" --by-- "/"
