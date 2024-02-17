@@ -10,18 +10,8 @@ const listingSchema = new Schema ({
     },
     description: String,
     image: {
-        type: String,
-        default:
-            "https://unsplash.com/photos/a-group-of-antelope-standing-in-the-desert-i60yUhfWeYI",
-        
-        // set: (v) => 
-        //     v===""
-        //     ? "https://unsplash.com/photos/a-group-of-antelope-standing-in-the-desert-i60yUhfWeYI"
-        //     : v,
-
-        set: (v) => 
-           "https://unsplash.com/photos/a-group-of-antelope-standing-in-the-desert-i60yUhfWeYI"
-            ,
+        url: String,
+        filename: String,
     },
     price: Number,
     location: String,
