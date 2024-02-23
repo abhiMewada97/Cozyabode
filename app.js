@@ -49,7 +49,22 @@ app.use(methodOverride("_method"));
 app.engine("ejs",ejsMate);
 app.use(express.static(path.join(__dirname,"/public")));
 
+// mongo session
+const store = MongoStore.create({     // method used to create new mongo store 
+    mongoUrl: dbURL,                // info stor on 'dbURL' 
+    crypto: {                       // When working with sensitive session data it is recommended to use encryption
+        secret: "mysupersecretcode" // adding secret
+    },
+    touchAfter: 24*3600  // Interval (in seconds) between session updates. // session related info store, not need to login & singup again and again // even though no change in session the info store in session 
+                        // so it mean info update after 24 hours if no change in session
+});
+
+store.on("error", () => {
+    console.log("ERROR in MONGO SESSION STORE ", error)
+});
+
 const sesssionOptions = {
+    store,
     secret: "mysupersecretcode",
     resave: false,
     saveUninitialized: true,
