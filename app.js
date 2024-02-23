@@ -12,6 +12,7 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
 const session = require("express-session");
+const MongoStore = require('connect-mongo');
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
@@ -25,7 +26,8 @@ const userRouter = require("./routes/user.js");
 const user = require("./models/user.js");
 const { read } = require("fs");
 
-const MONGO_URL = 'mongodb://127.0.0.1:27017/wanderlust';
+// const MONGO_URL = 'mongodb://127.0.0.1:27017/wanderlust';
+const dbURL = process.env.ATLASDB_URL;
 
 // MongoDB connection
 main().then(()=>{
@@ -37,7 +39,7 @@ main().then(()=>{
 })
 
 async function main() {
-    await mongoose.connect(MONGO_URL);
+    await mongoose.connect(dbURL);
 };
 
 app.set("view engine","ejs");
