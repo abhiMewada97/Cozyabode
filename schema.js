@@ -1,12 +1,5 @@
 const Joi = require("joi");
 
-// const listingSchema = Joi.object({
-// joi ke pass ek object ani chahiya suppost that is called listing
-
-// listing : Joi.object().require()
-// schema validation ke according ek object honi chahiye or ye required honi chahiye means
-// jabh bhi hamare pass koi request aye to ushke ander listing name ki object honi hi chahiye
-
 module.exports.listingSchema = Joi.object({
     listing : Joi.object({
         title: Joi.string().required(),

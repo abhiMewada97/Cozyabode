@@ -4,13 +4,9 @@ const ExpressError = require("./utils/ExpressError.js");
 const { listingSchema, reviewSchema } = require("./schema.js");
 
 module.exports.isLoggedIn = (req,res,next) => {
-    // console.log(req);
-    // console.log(req.path, " ... ", req.originalUrl);
-    // console.log(req.user);
 
     if(!req.isAuthenticated()) {
-        req.session.redirectUrl = req.originalUrl;                      // storing url inside session, because all methods and middleware have access of req.session so we can access redirectUrl
-        // req.flash("error","you must be logged in to create listing!");
+        req.session.redirectUrl = req.originalUrl;
         req.flash("error","you must be logged!");
         return res.redirect("/login");
     }
