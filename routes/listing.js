@@ -16,9 +16,13 @@ router.route("/")
 .post( isLoggedIn, 
     upload.single('listing[image]'),
     validateListing, 
-    wrapAsync(listingController.createListing ));
+    wrapAsync(listingController.createListing )
+    );
+// .post( upload.single('listing[image]'), (req,res) =>{
+//     res.send(req.file);
+// });
 
-    router.get("/new", isLoggedIn, listingController.renderNewForm)         // New Route
+router.get("/new", isLoggedIn, listingController.renderNewForm)         // New Route
 
 router.route("/:id")
 .get( wrapAsync( listingController.showListing ))         // Show Route
